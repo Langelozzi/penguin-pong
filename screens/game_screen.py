@@ -21,7 +21,9 @@ class GameScreen(Screen):
         self.ball = Ball()
         self.ball.launch()
         self.p1 = Paddle("left")
+        self.p1_power = False
         self.p2 = Paddle("right")
+        self.p2_power = False
         self.paddles = pygame.sprite.Group()
         self.paddles.add(self.p1, self.p2)
 
@@ -107,7 +109,7 @@ class GameScreen(Screen):
         # Make the ball bounce off the left paddle but only the front side of it
         if (self.p1.rect.right-10 <= self.ball.rect.x <= self.p1.rect.right
             and self.p1.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p1.rect.top):
-            self.ball.bounce("right", power=False)
+            self.ball.bounce("right", power=self.p1_power)
 
             pygame.mixer.music.load("sounds/boing.mp3")
             pygame.mixer.music.play()
@@ -116,7 +118,7 @@ class GameScreen(Screen):
         if (self.p2.rect.left+10 >= self.ball.rect.x + self.ball.size[0] >= self.p2.rect.left
             and self.p2.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p2.rect.top):
             
-            self.ball.bounce("left", power=False)
+            self.ball.bounce("left", power=self.p2_power)
             pygame.mixer.music.load("sounds/boing.mp3")
             pygame.mixer.music.play()
 
