@@ -83,7 +83,6 @@ class GameScreen(Screen):
             right_score_rect = right_score.get_rect(center=(WINDOW_WIDTH/1.34, WINDOW_HEIGHT/8))
             self.window.blit(right_score, right_score_rect)
             
-            ### Cant figure out how to make words disappear after 3 seconds****
             if scorer == "p1":
                 self.p1_point = FONTS["h1"].render(f"Point: Player 1", True, COLOURS["black"])
                 self.p1_point_rect = self.p1_point.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
@@ -105,16 +104,19 @@ class GameScreen(Screen):
         # Update the paddles' positions
         self.paddles.update()
 
-        # Make the ball bounce off right paddle
-        if self.p2.rect.colliderect(self.ball.rect):
-            self.ball.bounce("left", power=False)
+        # Make the ball bounce off the left paddle but only the front side of it
+        if (self.p1.rect.right-10 <= self.ball.rect.x <= self.p1.rect.right
+            and self.p1.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p1.rect.top):
+            self.ball.bounce("right", power=False)
 
             pygame.mixer.music.load("sounds/boing.mp3")
             pygame.mixer.music.play()
-        # Make the ball bounce off the left paddle
-        if self.p1.rect.colliderect(self.ball.rect):
-            self.ball.bounce("right", power=False)
 
+        # Make the ball bounce off right paddle but only the front side of it
+        if (self.p2.rect.left+10 >= self.ball.rect.x + self.ball.size[0] >= self.p2.rect.left
+            and self.p2.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p2.rect.top):
+            
+            self.ball.bounce("left", power=False)
             pygame.mixer.music.load("sounds/boing.mp3")
             pygame.mixer.music.play()
 

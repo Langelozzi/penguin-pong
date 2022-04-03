@@ -9,14 +9,14 @@ class Ball(pygame.sprite.Sprite):
     If gravity is True, the ball will obey to gravity (aka fall down).
     """
 
-    def __init__(self, gravity=False, size=20):
+    def __init__(self, gravity=False):
         """Constructor"""
         super().__init__()
 
-        self.size = size
+        self.size = (WINDOW_WIDTH/48, WINDOW_HEIGHT/34)
         # The ball is a circle
         image = pygame.image.load("imgs/fish.png")
-        self.image = pygame.transform.scale(image, (WINDOW_WIDTH/48 ,WINDOW_HEIGHT/34))
+        self.image = pygame.transform.scale(image, self.size)
 
         self.rect = self.image.get_rect()
 
@@ -56,7 +56,7 @@ class Ball(pygame.sprite.Sprite):
             self.rect.y += self.vspeed
 
         # Check the ball did not go off limits
-        if self.rect.x > LIMITS["right"] - self.size:
+        if self.rect.x > LIMITS["right"] - self.size[0]:
             self.rect.x = LIMITS["right"] // 2
             self.rect.y = LIMITS["down"] // 2
             self.off_limits = True
@@ -80,8 +80,8 @@ class Ball(pygame.sprite.Sprite):
             self.scorer = None
 
         # Check whether we need to bounce the ball off the wall
-        if self.rect.y > LIMITS["down"] - self.size:
-            self.rect.y = LIMITS["down"] - self.size
+        if self.rect.y > LIMITS["down"] - self.size[1]:
+            self.rect.y = LIMITS["down"] - self.size[1]
             self.bounce("vertical")
 
             pygame.mixer.music.load("sounds/bonk.mp3")
@@ -98,7 +98,7 @@ class Ball(pygame.sprite.Sprite):
         if (
             self.respect_gravity
             and -1 < self.vspeed < 1
-            and self.rect.y >= LIMITS["down"] - (self.size + 5)
+            and self.rect.y >= LIMITS["down"] - (self.size[1] + 5)
         ):
             self.vspeed = 0
 
