@@ -82,6 +82,7 @@ class MenuScreen(Screen):
         
         elif self.version == "finish":
             if event.type == pygame.MOUSEBUTTONDOWN and self.left_button_rect.collidepoint(event.pos):
+                print("quit clicked")
                 self.replay = False
             elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
                 self.replay = True
@@ -107,6 +108,6 @@ class MenuScreen(Screen):
             self.running = False
             return self.game_mode
         
-        if self.replay:
+        if self.replay != None:
             self.running = False
             return self.replay
