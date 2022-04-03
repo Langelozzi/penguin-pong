@@ -104,18 +104,18 @@ class Ball(pygame.sprite.Sprite):
 
         return self.p1_score, self.p2_score, self.scorer
 
-    def bounce(self, direction=None, power=True):
+    def bounce(self, direction=None, power=False):
         """Bounce the ball"""
 
         # Horizontal bounces 
         if direction in ("right", "left", "horizontal"):
-            self.hspeed = -self.hspeed
+            self.hspeed = -self.hspeed*(random.choice([1.0, 1.1, 1.2, 1.3, 1.4, 1.5]))
 
         # Vertical bounces 
         if direction in ("up", "down", "vertical"):
-            self.vspeed = -self.vspeed
+            self.vspeed = -self.vspeed*(random.choice([1.0, 1.1]))
 
         # Power bounce: increase the speed of the ball
         if power:
-            self.hspeed *= 1.3
+            self.hspeed *= 3.3
             self.vspeed *= 1.1
