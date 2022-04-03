@@ -80,9 +80,8 @@ class MenuScreen(Screen):
             elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
                 self.game_mode = "ranked"
         
-        elif self.version == "finish":
+        elif self.version == "finish" or self.version == "gameover":
             if event.type == pygame.MOUSEBUTTONDOWN and self.left_button_rect.collidepoint(event.pos):
-                print("quit clicked")
                 self.replay = False
             elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
                 self.replay = True
@@ -93,7 +92,8 @@ class MenuScreen(Screen):
         self.window.blit(self.bg, (0,0))
         
         # set the title to the center top of screen
-        self.window.blit(self.title, self.title_rect)
+        if self.version == "welcome" or self.version == "finish":
+            self.window.blit(self.title, self.title_rect)
         
         # blitting button in the window and text in the button
         self.window.blit(self.left_button, self.left_button_rect)

@@ -29,8 +29,10 @@ class Screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    result = False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.running = False
+                    result = False
                 else:
                     # Override this method to customize your screens!
                     self.process_event(event)

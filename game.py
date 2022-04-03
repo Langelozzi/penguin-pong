@@ -45,7 +45,16 @@ def main():
             p1_score, p2_score = game.loop()
             
             # Render Menu Screen as a Game Over screen
-            game_over = MenuScreen(window)
+            game_over = MenuScreen(
+                window,
+                version="gameover",
+                lbc="red",
+                lbw="Quit", 
+                rbc="blue",
+                rbw="Replay"
+            )
+            
+            replay = game_over.loop()
 
 
 if __name__ == "__main__":
