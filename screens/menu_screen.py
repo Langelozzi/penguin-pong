@@ -16,12 +16,33 @@ class MenuScreen(Screen):
         bg = pygame.image.load("imgs/welcomebg.jpg")
         self.bg = pygame.transform.scale(bg, (WINDOW_WIDTH, WINDOW_HEIGHT))
         
+        # Setting arguments to variables
         self.version = kwargs["version"]
         self.left_button_color = kwargs["lbc"]
         self.left_button_word = kwargs["lbw"]
         self.right_button_color = kwargs["rbc"]
         self.right_button_word = kwargs["rbw"]
+        
+        # Title and scores for the gameover screen
+        if self.version == "gameover":
+            self.left_score = kwargs["left_score"]
+            self.right_score = kwargs["right_score"]
+            
+            # Creating title surface and its rectangle
+            self.title = FONTS["h1"].render(f"Game Over", True, COLOURS["black"])
+            self.title_rect = self.title.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/8))
 
+            # Display left score
+            left_score = FONTS["h1"].render(f"{self.left_score}", True, COLOURS["black"])
+            left_score_rect = left_score.get_rect(center=(WINDOW_WIDTH/8, WINDOW_HEIGHT/8))
+            self.bg.blit(left_score, left_score_rect)
+
+            # Display right score
+            right_score = FONTS["h1"].render(f"{self.right_score}", True, COLOURS["black"])
+            right_score_rect = right_score.get_rect(center=(WINDOW_WIDTH/1.15, WINDOW_HEIGHT/8))
+            self.bg.blit(right_score, right_score_rect)
+
+        # Title for the normal menu screen
         if self.version == "welcome" or self.version == "finish":
             # Creating title surface and its rectangle
             self.title = FONTS["h1"].render(f"Penguin Pong", True, COLOURS["black"])
@@ -92,8 +113,7 @@ class MenuScreen(Screen):
         self.window.blit(self.bg, (0,0))
         
         # set the title to the center top of screen
-        if self.version == "welcome" or self.version == "finish":
-            self.window.blit(self.title, self.title_rect)
+        self.window.blit(self.title, self.title_rect)
         
         # blitting button in the window and text in the button
         self.window.blit(self.left_button, self.left_button_rect)

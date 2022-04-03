@@ -51,9 +51,11 @@ def main():
                 lbc="red",
                 lbw="Quit", 
                 rbc="blue",
-                rbw="Replay"
+                rbw="Replay",
+                left_score=p1_score,
+                right_score=p2_score
             )
-            
+
             replay = game_over.loop()
 
 
