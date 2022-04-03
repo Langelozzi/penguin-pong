@@ -101,7 +101,6 @@ class GameScreen(Screen):
             # Exit current match once someone hits 10
             if p1_score == 10 or p2_score == 10:
                 self.running = False
-                return p1_score, p2_score
 
         # Update the paddles' positions
         self.paddles.update()
@@ -127,6 +126,5 @@ class GameScreen(Screen):
         if self.ball.off_limits:
             self.ball.launch(random.choice(["left", "right"]))
             self.ball.off_limits = False
-            return True
 
-        return False
+        return p1_score, p2_score

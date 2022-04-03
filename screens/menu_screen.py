@@ -3,6 +3,7 @@
 # Purpose: Menu screen object
 
 # Imports
+from enum import Flag
 import pygame
 from .base_screen import Screen
 from constants import COLOURS, FONTS, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -42,15 +43,16 @@ class MenuScreen(Screen):
 
         # Inizialiting game mode as none
         self.game_mode = None
+        self.replay = None
 
     # Helper functions
     def change_button_colour(self, button, color):
-        if button == "ranked":
+        if button == "right":
             self.right_button.fill(color)
             self.right_button_words = FONTS["h2"].render(self.right_button_word, False, COLOURS["black"])
             self.window.blit(self.right_button, self.right_button_rect)
             self.right_button.blit(self.right_button_words, self.right_button_words_rect)
-        elif button == "practice":
+        elif button == "left":
             self.left_button.fill(color)
             self.practice_words = FONTS["h2"].render(self.left_button_word, False, COLOURS["black"])
             self.window.blit(self.left_button, self.left_button_rect)
@@ -60,21 +62,30 @@ class MenuScreen(Screen):
     def process_event(self, event):
         # Checking if the mouse is clicked inside the button and setting game mode based off which button is clicked
         if self.right_button_rect.collidepoint(pygame.mouse.get_pos()):
-            self.change_button_colour("ranked", COLOURS["white"])
+            self.change_button_colour("right", COLOURS["white"])
         elif not self.right_button_rect.collidepoint(pygame.mouse.get_pos()):
-            self.change_button_colour("ranked", self.right_button_color)
+            self.change_button_colour("right", self.right_button_color)
 
         #change practice button colour on hover
         if self.left_button_rect.collidepoint(pygame.mouse.get_pos()):
-            self.change_button_colour("practice", COLOURS["white"])
+            self.change_button_colour("left", COLOURS["white"])
         elif not self.left_button_rect.collidepoint(pygame.mouse.get_pos()):
-            self.change_button_colour("practice", self.left_button_color)
+            self.change_button_colour("left", self.left_button_color)
         
-        # Checking if the mouse is clicked inside the button and setting game mode based off which button is clicked
-        if event.type == pygame.MOUSEBUTTONDOWN and self.left_button_rect.collidepoint(event.pos):
-            self.game_mode = "practice"
-        elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
-            self.game_mode = "ranked"
+        # Different functions for buttons based on what version of the menu screen
+        if self.version == "welcome":
+            # Checking if the mouse is clicked inside the button and setting game mode based off which button is clicked
+            if event.type == pygame.MOUSEBUTTONDOWN and self.left_button_rect.collidepoint(event.pos):
+                self.game_mode = "practice"
+            elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
+                self.game_mode = "ranked"
+        
+        elif self.version == "finish":
+            if event.type == pygame.MOUSEBUTTONDOWN and self.left_button_rect.collidepoint(event.pos):
+                self.replay = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and self.right_button_rect.collidepoint(event.pos):
+                self.replay = True
+                
 
     def process_loop(self):
         # blit the background image
@@ -95,3 +106,7 @@ class MenuScreen(Screen):
         if self.game_mode:
             self.running = False
             return self.game_mode
+        
+        if self.replay:
+            self.running = False
+            return self.replay
