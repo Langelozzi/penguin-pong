@@ -76,8 +76,8 @@ class Ball(pygame.sprite.Sprite):
             pygame.mixer.music.load("sounds/oof.mp3")
             pygame.mixer.music.play()
 
-        else:
-            self.scorer = None
+        # else:
+        #     self.scorer = None
 
         # Check whether we need to bounce the ball off the wall
         if self.rect.y > LIMITS["down"] - self.size[1]:
@@ -117,5 +117,5 @@ class Ball(pygame.sprite.Sprite):
 
         # Power bounce: increase the speed of the ball
         if power:
-            self.hspeed *= 3.3
+            self.hspeed *= 5.3
             self.vspeed *= 1.1

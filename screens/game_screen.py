@@ -28,6 +28,7 @@ class GameScreen(Screen):
         self.paddles.add(self.p1, self.p2)
 
         self.mode = args[1]
+        self.screen_shake = 0
 
     def process_event(self, event):
         # Right penguin controls
@@ -36,11 +37,16 @@ class GameScreen(Screen):
                 self.p2.speed -= 7
             if event.key == pygame.K_l:
                 self.p2.speed += 7
+            if event.key == pygame.K_o:
+                self.p2_power = True
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_p:
                 self.p2.speed += 7
             if event.key == pygame.K_l:
                 self.p2.speed -= 7
+            if event.key == pygame.K_o:
+                self.p2_power = False
 
         # Left penguin controls
         if event.type == pygame.KEYDOWN:
@@ -48,60 +54,34 @@ class GameScreen(Screen):
                 self.p1.speed -= 7
             if event.key == pygame.K_a:
                 self.p1.speed += 7
+            if event.key == pygame.K_w:
+                self.p1_power = True
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
                 self.p1.speed += 7
             if event.key == pygame.K_a:
                 self.p1.speed -= 7
+            if event.key == pygame.K_w:
+                self.p1_power = False
 
         
 
     def process_loop(self):
-        # Blit the background first
-        self.window.blit(self.bg, (0, 0))
-
-        # Moving the paddles
+        # Relaunch ball when it goes off limits
+        if self.ball.off_limits:
+            self.ball.launch(random.choice(["left", "right"]))
+            self.ball.off_limits = False
+            self.screen_shake = 10
         
+        # Moving the paddles
         self.p1.up()
         self.p1.down()
         self.p2.up()
         self.p2.down()
 
-        # drawing the center line
-        pygame.draw.aaline(self.window, COLOURS["black"], (WINDOW_WIDTH/2, 0), (WINDOW_WIDTH/2, WINDOW_HEIGHT))
-
         # Update the ball position and get scores from return value
         p1_score, p2_score, scorer = self.ball.update()
-
-        # Added features for ranked mode
-        if self.mode == "ranked":
-            # Display left score
-            left_score = FONTS["h1"].render(f"{p1_score}", True, COLOURS["black"])
-            left_score_rect = left_score.get_rect(center=(WINDOW_WIDTH/4, WINDOW_HEIGHT/8))
-            self.window.blit(left_score, left_score_rect)
-
-            # Display right score
-            right_score = FONTS["h1"].render(f"{p2_score}", True, COLOURS["black"])
-            right_score_rect = right_score.get_rect(center=(WINDOW_WIDTH/1.34, WINDOW_HEIGHT/8))
-            self.window.blit(right_score, right_score_rect)
-            
-            if scorer == "p1":
-                self.p1_point = FONTS["h1"].render(f"Point: Player 1", True, COLOURS["black"])
-                self.p1_point_rect = self.p1_point.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
-                self.window.blit(self.p1_point, self.p1_point_rect)
-                pygame.display.update()
-                pygame.time.wait(3000)
-
-            elif scorer == "p2":
-                self.p2_point = FONTS["h1"].render(f"Point: Player 2", True, COLOURS["black"])
-                self.p2_point_rect = self.p2_point.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
-                self.window.blit(self.p2_point, self.p2_point_rect)
-                pygame.display.update()
-                pygame.time.wait(3000)
-
-            # Exit current match once someone hits 10
-            if p1_score == 10 or p2_score == 10:
-                self.running = False
 
         # Update the paddles' positions
         self.paddles.update()
@@ -122,13 +102,54 @@ class GameScreen(Screen):
             pygame.mixer.music.load("sounds/boing.mp3")
             pygame.mixer.music.play()
 
+        if self.screen_shake > 0:
+            self.screen_shake -= 1
+        
+        render_offset = [0 , 0]
+        if self.screen_shake:
+            render_offset[0] = random.randint(0, 8) - 4
+            render_offset[1] = random.randint(0, 8) - 4
+        
+        self.window.blit(self.bg, render_offset)
+
+        # Added features for ranked mode
+        if self.mode == "ranked":
+            # Display left score
+            left_score = FONTS["h1"].render(f"{p1_score}", True, COLOURS["black"])
+            left_score_rect = left_score.get_rect(center=(WINDOW_WIDTH/4, WINDOW_HEIGHT/8))
+            self.window.blit(left_score, left_score_rect)
+
+            # Display right score
+            right_score = FONTS["h1"].render(f"{p2_score}", True, COLOURS["black"])
+            right_score_rect = right_score.get_rect(center=(WINDOW_WIDTH/1.34, WINDOW_HEIGHT/8))
+            self.window.blit(right_score, right_score_rect)
+            
+            # Display scorer text for p1
+            if scorer == "p1" and self.screen_shake == 1:
+                self.p1_point = FONTS["h1"].render(f"Point: Player 1", True, COLOURS["black"])
+                self.p1_point_rect = self.p1_point.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+                self.window.blit(self.p1_point, self.p1_point_rect)
+                pygame.display.update()
+                pygame.time.wait(3000)
+            
+            # Display scorer text for p2
+            elif scorer == "p2" and self.screen_shake == 1:
+                self.p2_point = FONTS["h1"].render(f"Point: Player 2", True, COLOURS["black"])
+                self.p2_point_rect = self.p2_point.get_rect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+                self.window.blit(self.p2_point, self.p2_point_rect)
+                pygame.display.update()
+                pygame.time.wait(3000)
+
+            # Exit current match once someone hits 10
+            if p1_score == 10 or p2_score == 10:
+                self.running = False
+
         # Blit everything
         self.paddles.draw(self.window)
         self.window.blit(self.ball.image, self.ball.rect)
 
-        # Relaunch ball when it goes off limits
-        if self.ball.off_limits:
-            self.ball.launch(random.choice(["left", "right"]))
-            self.ball.off_limits = False
+        # drawing the center line
+        pygame.draw.aaline(self.window, COLOURS["black"], (WINDOW_WIDTH/2, 0), (WINDOW_WIDTH/2, WINDOW_HEIGHT))
+        
 
         return p1_score, p2_score
