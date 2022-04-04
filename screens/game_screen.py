@@ -102,7 +102,7 @@ class GameScreen(Screen):
         self.paddles.update()
 
         # Make the ball bounce off the left paddle but only the front side of it
-        if (self.p1.rect.right-10 <= self.ball.rect.x <= self.p1.rect.right
+        if (self.p1.rect.right-20 <= self.ball.rect.x <= self.p1.rect.right
             and 
             self.p1.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p1.rect.top):
             
@@ -111,7 +111,7 @@ class GameScreen(Screen):
             pygame.mixer.music.play()
 
         # Make the ball bounce off right paddle but only the front side of it
-        if (self.p2.rect.left+10 >= self.ball.rect.x + self.ball.size[0] >= self.p2.rect.left
+        if (self.p2.rect.left+20 >= self.ball.rect.x + self.ball.size[0] >= self.p2.rect.left
             and 
             self.p2.rect.bottom >= (self.ball.rect.top+self.ball.rect.bottom)/2 >= self.p2.rect.top):
             
