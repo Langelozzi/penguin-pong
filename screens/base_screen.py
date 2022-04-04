@@ -1,5 +1,5 @@
-import pygame
-import sys
+import pygame, sys
+from constants import FONTS, COLOURS
 
 
 class Screen:
@@ -15,6 +15,21 @@ class Screen:
         self.bgcolor = bgcolor
         if not self.bgcolor:
             self.bgcolor = (0, 0, 0)
+
+    # Helper method to create text surface and rect that can be accessed by all child classes (aka the other screens)
+    def text_object(self, font, text, position, color="black"):
+        score = FONTS[font].render(f"{text}", True, COLOURS[color])
+        score_rect = score.get_rect(center=position)
+        return score, score_rect
+
+    # Helper method to create button surface and rect that can be accessed by all child classes
+    def button_object(self, size, color, position):
+        button = pygame.Surface(size)
+        button.fill(COLOURS[color])
+        button_rect = button.get_rect(center=position)
+
+        return button, button_rect
+        
 
     def loop(self):
         """Main screen loop: deals with Pygame events"""
