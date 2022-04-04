@@ -1,6 +1,10 @@
+# Author: Lucas Angelozzi
+# Date: 03/28/22
+# Purpose: Paddle class for pong
+
+# Imports
 import pygame
 from constants import LIMITS, WINDOW_WIDTH, WINDOW_HEIGHT
-
 
 class Paddle(pygame.sprite.Sprite):
     """Paddle class"""
@@ -15,18 +19,20 @@ class Paddle(pygame.sprite.Sprite):
         self.speed = 0
 
         # Load images, set rectangle and starting positions
+        # Left penguin
         if position == "left":
             image = pygame.image.load("imgs/penguin_left.png")
             self.image = pygame.transform.scale(image, self.size)
             self.rect = self.image.get_rect()
             self.rect.x = LIMITS["left"]
+        # Right Penguin
         elif position == "right":
             image = pygame.image.load("imgs/penguin_right.png")
             self.image = pygame.transform.scale(image, self.size)
             self.rect = self.image.get_rect()
             self.rect.x = LIMITS["right"] - self.size[0]
             
-
+        # Set both penguins in the vertical middle
         self.rect.y = LIMITS["down"] // 2
 
     def refresh_rect(self, color):

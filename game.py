@@ -10,7 +10,7 @@ def main():
     replay = True
 
     while replay == True:
-        # Render the welcome page and set the mode based on users decision
+        # Create welcome page object
         welcome = MenuScreen(
             window, 
             version="welcome", 
@@ -19,15 +19,17 @@ def main():
             rbc="orange",
             rbw="Ranked"
         )
-        mode = welcome.loop() #this is what starts the actual game
+        
+        # Start the welcome page loop and get mode as return value
+        mode = welcome.loop() 
 
         # Start game in practice mode or ranked mode
         if mode == "practice":
-            print("Practice mode")
+            # Create game screen object as practice mode and start the loop
             game = GameScreen(window, "practice")
             game.loop()
 
-            # Render Menu Screen as End Game screen
+            # Create and Render Menu Screen as End Game screen
             end_game = MenuScreen(
                 window, 
                 version="finish",
@@ -36,15 +38,15 @@ def main():
                 rbc="blue",
                 rbw="Replay"
             )
-            
+            # Return value is true if user selected to replay
             replay = end_game.loop()
 
         elif mode == "ranked":
-            print("Playing ranked")
+            # Create game screen object as ranked mode and start the loop
             game = GameScreen(window, "ranked")
-            p1_score, p2_score = game.loop()
+            p1_score, p2_score = game.loop() # Getting scores as return values so they can be passed into the game_over screen
             
-            # Render Menu Screen as a Game Over screen
+            # Render Menu Screen as a Game Over screen and start loop
             game_over = MenuScreen(
                 window,
                 version="gameover",
@@ -55,7 +57,6 @@ def main():
                 left_score=p1_score,
                 right_score=p2_score
             )
-
             replay = game_over.loop()
 
 

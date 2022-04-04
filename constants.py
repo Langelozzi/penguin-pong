@@ -10,7 +10,6 @@ LIMITS = {
     "right": WINDOW_WIDTH,
 }
 
-# when changing the window size, fonts dont change because they are dependant on only height
 pygame.font.init()
 FONTS = {
     "h1": pygame.font.SysFont('arial', int((WINDOW_HEIGHT + WINDOW_WIDTH)/15)),

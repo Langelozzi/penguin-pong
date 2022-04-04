@@ -1,3 +1,8 @@
+# Author: Lucas Angelozzi
+# Date: 03/28/22
+# Purpose: Ball class for pong
+
+# Imports
 import random
 import pygame
 from constants import LIMITS, COLOURS, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -13,17 +18,21 @@ class Ball(pygame.sprite.Sprite):
         """Constructor"""
         super().__init__()
 
+        # Setting size of ball
         self.size = (WINDOW_WIDTH/48, WINDOW_HEIGHT/34)
-        # The ball is a circle
+
+        # Loading image and sizing it accordingly
         image = pygame.image.load("imgs/fish.png")
         self.image = pygame.transform.scale(image, self.size)
 
+        # Creating rectangle from the image surface
         self.rect = self.image.get_rect()
 
         # Spawn in the middle of the screen
         self.rect.x = LIMITS["right"] // 2
         self.rect.y = LIMITS["down"] // 2
 
+        # Track the score and who was the player that scored
         self.p1_score = 0
         self.p2_score = 0
         self.scorer = None
@@ -36,12 +45,14 @@ class Ball(pygame.sprite.Sprite):
         self.respect_gravity = gravity
         self.off_limits = False
 
+
     def launch(self, direction=None, hspeed=2.5, vspeed=-5):
         """Launches the ball up in the air"""
         self.hspeed = hspeed
         if direction == "left":
             self.hspeed = -self.hspeed
         self.vspeed = vspeed
+
 
     def update(self):
         """Convenience method"""
@@ -76,9 +87,6 @@ class Ball(pygame.sprite.Sprite):
             pygame.mixer.music.load("sounds/oof.mp3")
             pygame.mixer.music.play()
 
-        # else:
-        #     self.scorer = None
-
         # Check whether we need to bounce the ball off the wall
         if self.rect.y > LIMITS["down"] - self.size[1]:
             self.rect.y = LIMITS["down"] - self.size[1]
@@ -104,16 +112,17 @@ class Ball(pygame.sprite.Sprite):
 
         return self.p1_score, self.p2_score, self.scorer
 
+
     def bounce(self, direction=None, power=False):
         """Bounce the ball"""
 
         # Horizontal bounces 
         if direction in ("right", "left", "horizontal"):
-            self.hspeed = -self.hspeed*(random.choice([1.0, 1.1, 1.2, 1.3, 1.4, 1.5]))
+            self.hspeed = -self.hspeed*(random.choice([1.0, 1.1, 1.2, 1.3, 1.4, 1.5])) # Randomizes the angle and speed of the bounce everytime
 
         # Vertical bounces 
         if direction in ("up", "down", "vertical"):
-            self.vspeed = -self.vspeed*(random.choice([1.0, 1.1]))
+            self.vspeed = -self.vspeed*(random.choice([1.0, 1.1])) # Randomizes the angle and speed of the bounce everytime
 
         # Power bounce: increase the speed of the ball
         if power:

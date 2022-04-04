@@ -1,10 +1,14 @@
+# Author: Lucas Angelozzi
+# Date: 03/28/22
+# Purpose: Game Screen Object
+
+# Imports
 import random
 import pygame
 import pygame.locals
 from .base_screen import Screen
 from models import Ball, Paddle
 from constants import WINDOW_HEIGHT, WINDOW_WIDTH, FONTS, COLOURS
-
 
 class GameScreen(Screen):
     """Example class for a Pong game screen"""
@@ -32,6 +36,12 @@ class GameScreen(Screen):
         self.screen_shake = 0
 
     def process_event(self, event):
+        """Processes any pygame events that occur during gameplay such as key presses
+
+        Args:
+            event (pygame.event): a pygame event that occurs
+        """
+        
         # Right penguin controls
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
@@ -67,6 +77,12 @@ class GameScreen(Screen):
         
 
     def process_loop(self):
+        """The main loop for when the game is being played
+
+        Returns:
+            tuple: the score of player 1 and the score of player 2
+        """
+        
         # Relaunch ball when it goes off limits
         if self.ball.off_limits:
             self.ball.launch(random.choice(["left", "right"]))

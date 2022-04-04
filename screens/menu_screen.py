@@ -3,12 +3,12 @@
 # Purpose: Menu screen object
 
 # Imports
-from enum import Flag
 import pygame
 from .base_screen import Screen
 from constants import COLOURS, FONTS, WINDOW_HEIGHT, WINDOW_WIDTH
 
 class MenuScreen(Screen):
+    '''Class for a Menu Screen object'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -57,8 +57,15 @@ class MenuScreen(Screen):
         self.game_mode = None
         self.replay = None
 
-
+    # A helper function to reduce some repetetive code
     def change_button_colour(self, button, color):
+        """Change the colour of a button
+
+        Args:
+            button (pygame.Surface): the button surface you would like to change the colour of
+            color (rgb): a colour from constants.COLOURS or an rgb value
+        """
+        
         if button == "right":
             self.right_button.fill(color)
             self.right_button_words = FONTS["h2"].render(self.right_button_word, False, COLOURS["black"])
@@ -72,6 +79,12 @@ class MenuScreen(Screen):
 
 
     def process_event(self, event):
+        """Processes any pygame events that occur during gameplay such as mouse presses
+
+        Args:
+            event (pygame.event): a pygame event that occurs
+        """
+        
         # Different functions for buttons based on what version of the menu screen
         if self.version == "welcome":
             # Checking if the mouse is clicked inside the button and setting game mode based off which button is clicked
@@ -89,6 +102,13 @@ class MenuScreen(Screen):
                 
 
     def process_loop(self):
+        """The loop for any menu screens that are being shown 
+
+        Returns:
+            bool or str: will either return the game mode if the player is going to start a match
+                            or it will return a boolean about whether to replay the game.
+        """
+        
         # Change right button colour on hover
         if self.right_button_rect.collidepoint(pygame.mouse.get_pos()):
             self.change_button_colour("right", COLOURS["white"])
