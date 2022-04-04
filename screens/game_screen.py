@@ -87,7 +87,7 @@ class GameScreen(Screen):
         if self.ball.off_limits:
             self.ball.launch(random.choice(["left", "right"]))
             self.ball.off_limits = False
-            self.screen_shake = 10 # sets shake to 10 frames
+            self.screen_shake = 15 # sets shake to 15 frames
         
         # Moving the paddles. Buttons simply control speed and when no key then speed is 0
         self.p1.up()
